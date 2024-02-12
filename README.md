@@ -5,7 +5,9 @@ Notes are synced using a github remote repository. Each client queries the remot
 The basic assumptions here are that there is only a single user using those different clients, e.g. files aren't edited at the same time on different devices, and that the user won't switch between using one and then another device in a super short timespan, e.g. less than 5 minutes.
 
 The idea is to use the `inotifywait` utility to check whether the vault or any file in it is either being opened or being edited, which allows for taking the appropriate action. When files have been opened, we simply `git pull` (as long as we didn't just do it already in the last few minutes). When files are being edited, we start a timer for X seconds (e.g. 30-60) and after that time commit & push to the remote, assuming that once a user starts typing they will do so for at least a short period of time and we don't want to create too many commits.  
-Immediately after pulling/pushing, we listen again for events using `inotifywait`.
+Immediately after pulling/pushing, we listen again for events using `inotifywait`.  
+
+Note that it might make sense to gitignore config files in `.obsidian`, depending on your preferences.
 
 ## Desktop (Linux)
 On linux, the two bash scripts (one for the loading/pulling, one for the saving/pushing) can simply be started after reboot using cron jobs. Make sure to set up ssh keys for github such that the git commands complete without problems.
